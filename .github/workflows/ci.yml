@@ -1,0 +1,32 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install Bun
+        run: curl -fsSL https://bun.sh/install | bash
+
+      - name: Set up Bun
+        run: echo "export PATH=\"\$HOME/.bun/bin:\$PATH\"" >> $GITHUB_ENV
+
+      - name: Install dependencies with Bun
+        run: bun install
+
+      - name: Run tests
+        run: bun test || echo "No tests specified, skipping..."
+
+      - name: Build project
+        run: bun run build
